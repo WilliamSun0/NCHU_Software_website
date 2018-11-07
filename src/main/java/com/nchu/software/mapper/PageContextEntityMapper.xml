@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nchu.software.mapper.PageContextEntityMapper">
+
+    <resultMap id="BaseMap" type="com.nchu.software.entity.PageContextEntity">
+        <id property="pagecontextid" column="pagecontextid" jdbcType="INTEGER"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="uploadtime" column="uploadtime" jdbcType="VARCHAR"/>
+        <result property="verify" column="verify" jdbcType="INTEGER"/>
+        <result property="publish" column="publish" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 保存文章信息的方法 -->
+    <insert id="savePageContextEntity" parameterType="pageContextEntity">
+        insert into page_context(
+          SECONDMENUID, TITLE, AUTHOR, CONTEXT, SOURCE, UPLOADTIME, COUNT, STATUS, verify, published)
+        values(
+          #{secondmenuid},
+          #{title},
+          #{author},
+          #{context},
+          #{source},
+          #{uploadtime},
+          #{count},
+          #{status},
+          #{verify},
+          #{published}
+        )
+
+    </insert>
+
+    <!-- 查询（未clean）总记录数 -->
+    <select id="selectCount" resultType="int">
+        select count(*) from page_context where status = 0
+    </select>
+
+    <!-- 查询（已clean）记录总数 -->
+    <select id="selectCount2" resultType="int">
+        select count(*) from page_context where status = 1;
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="findByPage" resultMap="BaseMap" parameterType="Map">
+        select * from page_context
+        <!-- 表示我进入的是文章列表页面 -->
+        <if test="goId == 0">
+            where status = 0
+        </if>
+        <!-- 表示我进入的是回收站页面 -->
+        <if test="goId == 1">
+            where status = 1
+        </if>
+        <if test="start != null and size != null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <!-- 多条件查询 -->
+    <select id="findConByPage" resultMap="BaseMap" parameterType="Map">
+        select * from page_context
+        <!-- 表示我进入的是文章列表页面 -->
+        <if test="goId == 0">
+            where status = 0
+        </if>
+        <!-- 表示我进入的是回收站页面 -->
+        <if test="goId == 1">
+            where status = 1
+        </if>
+        <if test="verify != null and verify != ''">
+            and verify = #{verify}
+        </if>
+        <if test="publish != null and publish != ''">
+            and publish = #{publish}
+        </if>
+        <if test="status != null and status != ''">
+            and status = #{status}
+        </if>
+        <if test="start != null and size != null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <!-- 删除功能（永久删除信息） -->
+    <delete id="delete" parameterType="int">
+        delete from page_context where pagecontextid = #{pagecontextid}
+    </delete>
+
+    <!-- 更新功能 -->
+    <update id="update" parameterType="com.nchu.software.entity.PageContextEntity">
+        update PageContextEntity set
+          pagecontextid        = #{pagecontextid},
+          author    = #{author},
+
+          content   = #{r_content},
+          uploadtime      = #{uploadtime},
+          verify    = #{verify},
+          publish   = #{publish},
+          status    = #{status}
+        where pagecontextid = #{pagecontextid}
+    </update>
+
+    <!-- 根据ID查询 -->
+    <select id="findById" parameterType="int" resultType="com.nchu.software.entity.PageContextEntity">
+        select * from page_context where pagecontextid = #{pagecontextid}
+    </select>
+
+    <!-- 文章删除功能（仅把文章放入到回收站） -->
+    <update id="clean" parameterType="int">
+        update pagecontextid set status = 1 where pagecontextid = #{pagecontextid}
+    </update>
+
+    <!-- 恢复文章的功能（将文章从回收站中移除，即仅仅改变status的值即可） -->
+    <update id="restore" parameterType="int">
+        update PageContextEntity set status = 0 where pagecontextid = #{pagecontextid}
+    </update>
+
+
+
+</mapper>

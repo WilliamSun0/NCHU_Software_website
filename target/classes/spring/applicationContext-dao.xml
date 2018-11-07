@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+
+	<context:property-placeholder location="classpath:db.properties"/>
+
+	<!--2.数据库连接池-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<!--配置连接池属性-->
+		<property name="driverClass" value="${driver}" />
+
+		<!-- 基本属性 url、user、password -->
+		<property name="jdbcUrl" value="${url}" />
+		<property name="user" value="${myuser}" />
+		<property name="password" value="${password}" />
+
+		<!--c3p0私有属性-->
+		<property name="maxPoolSize" value="200"/>
+		<property name="minPoolSize" value="10"/>
+		<!--关闭连接后不自动commit-->
+		<property name="autoCommitOnClose" value="false"/>
+
+		<!--获取连接超时时间-->
+		<property name="checkoutTimeout" value="1000"/>
+		<!--当获取连接失败重试次数-->
+		<property name="acquireRetryAttempts" value="2"/>
+
+	</bean>
+	
+	<bean id="sqlsessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nchu.software.mapper" />
+	</bean>
+</beans>

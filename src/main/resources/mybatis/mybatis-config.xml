@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="true"/>
+		 <setting name="lazyLoadingEnabled" value="true"/>
+		 <setting name="aggressiveLazyLoading" value="false"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.nchu.software.entity.FirstMenuEntity" alias="firstMenuEntity"/>
+		<typeAlias type="com.nchu.software.entity.SecondMenuEntity" alias="secondMenuEntity"/>
+		<typeAlias type="com.nchu.software.entity.PageContextEntity" alias="pageContextEntity"/>
+		<typeAlias type="com.nchu.software.entity.DownLoadEntity" alias="downLoadEntity"/>
+		<typeAlias type="com.nchu.software.entity.DownLoadTypeEntity" alias="downLoadTypeEntity"/>
+		<typeAlias type="com.nchu.software.entity.Admin" alias="admin"/>
+	</typeAliases>
+	
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql"/>
+			<property name="pageSizeZero" value="true"/>
+			<property name="offsetAsPageNum" value="true"/>
+			<property name="reasonable" value="true"/>
+			<property name="rowBoundsWithCount" value="true"/>
+
+		</plugin>
+	</plugins>
+</configuration>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nchu.software.mapper.PageContextMapper">
+	
+	<cache />
+	<sql id="pageContext">pagecontextid,title,author,context,source,uploadtime,count,status</sql>
+	<!-- 通过二级菜单查询文章内容 -->
+	<select id="findBySecondMenuId" parameterType="Long" resultType="pageContextEntity">
+		select *
+		from page_context WHERE secondmenuid = #{secondMenuId}
+	</select>
+	
+	<!-- 通过文章ID查找 ，用于公告栏直接点击文章-->
+	<select id="findByPageId" resultType="pageContextEntity">
+		select *
+		from page_context where pagecontextid = #{pageContextId}
+	</select>
+	
+	<!-- 更新点击数 -->
+	<update id="updateCount" parameterType="Long">
+		update page_context set count = count + 1 where pagecontextid = #{pagecontextid}
+	</update>
+	
+	<select id="getAll" resultType="pageContextEntity">
+		select * from page_context
+	</select>
+	
+	<select id="getPageBySecondId" resultType="pageContextEntity" parameterType="java.util.List">
+		select * from page_context
+		<!--where secondmenuid in-->
+		<!--<foreach collection="list" separator="," open="(" close=")" item="secondmenuid">-->
+		<!--#{secondmenuid}-->
+		<!--</foreach>-->
+	</select>
+	
+	
+</mapper>

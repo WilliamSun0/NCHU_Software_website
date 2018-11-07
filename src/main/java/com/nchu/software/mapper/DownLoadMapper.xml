@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.nchu.software.mapper.DownLoadMapper">
+	<sql id="file">fileid,downloadid,filename,provider,uploadtime,downloadnum,filepath,status</sql>
+	<!-- 找到所有文件 -->
+	<select id="findListFile" resultType="downLoadEntity">
+		select <include refid="file" /> from download_file
+	</select>
+	
+	<!-- 通过分类ID找到下面的所有文件 -->
+	<select id="findFileByDownLoadId" resultType="downLoadEntity">
+		select <include refid="file" /> from download_file where downloadid = #{downloadid}
+	</select>
+	
+	<!-- 通过文件id找到文件名称和路径 -->
+	<select id="downLoadByFileId" resultType="downLoadEntity">
+		select filename,filepath from download_file where fileid = #{fileid}
+	</select>
+</mapper>
